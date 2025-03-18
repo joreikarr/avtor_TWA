@@ -168,7 +168,7 @@
             let dataStringTmp = dataToSend.join('_');
             
             
-            let dataString = encodeData(dataStringTmp) + "-" + work_type;
+            let dataString = dataStringTmp + "-" + work_type;
             console.log('Отправляемые данные:', dataString);
             try {
         tg.sendData(dataString);
