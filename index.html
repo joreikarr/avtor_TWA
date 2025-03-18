@@ -131,6 +131,13 @@
         // Заполняем таблицу при загрузке страницы
         populateTable(incomingData);
 
+        function encodeData(data) {
+    // Кодируем строку в base64
+    const encodedData = btoa(data);
+    return encodedData;
+}
+        
+        
         // Обработчик кнопки отправки данных в Telegram
         tg.MainButton.show().onClick(function() {
             // Собираем все данные из таблиц
@@ -153,7 +160,8 @@
             // Формируем строку для отправки в Telegram
             let dataString = dataToSend.join('_');
             console.log('Отправляемые данные:', dataString);
-            tg.sendData(dataString);
+            console.log('Отправляемые данные (закодированные):', encodeData(dataString));
+            tg.sendData(encodeData(dataString));
             // Здесь добавьте код для отправки данных в Telegram через API
         });
     </script>
