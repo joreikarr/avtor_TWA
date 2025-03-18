@@ -63,7 +63,8 @@
     <script>
         function decodeData(encodedData) {
     let decodedData = atob(encodedData);  // Декодируем данные с помощью base64
-    return decodedData;  
+    let result = decodedData.replace(/\s/g, '')
+    return result;  
 }
 
          const url = window.location.search;
