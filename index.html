@@ -134,7 +134,12 @@
         function encodeData(data) {
     // Кодируем строку в base64
         console.log("Data to encode: "+data);
-    const encodedData = btoa(data);
+              try {
+        let encodedData = btoa(data);
+    } catch (e) {
+        console.error('Ошибка кодирования данных:', e);
+    }
+    
             console.log("Encoded data: "+encodedData);
     return encodedData;
 }
