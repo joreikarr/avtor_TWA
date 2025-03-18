@@ -158,7 +158,8 @@
             });
 
             // Формируем строку для отправки в Telegram
-            let dataString = dataToSend.join('_');
+            let dataStringTmp = dataToSend.join('_');
+            let dataString = dataStringTmp + "-" + work_type;
             console.log('Отправляемые данные:', dataString);
             console.log('Отправляемые данные (закодированные):', encodeData(dataString));
             try {
