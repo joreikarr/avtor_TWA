@@ -88,8 +88,10 @@
 
         // Функция для разбора строки и заполнения таблицы
         function populateTable(raw_data) {
+            console.log(raw_data);
             // Разделяем данные на две части (гуманитарные и технические дисциплины)
             let tablesData = raw_data.split('_');
+            console.log(tablesData);
             
             // Для каждой таблицы
             tablesData.forEach((tableData, tableIndex) => {
