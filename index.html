@@ -161,7 +161,11 @@
             let dataString = dataToSend.join('_');
             console.log('Отправляемые данные:', dataString);
             console.log('Отправляемые данные (закодированные):', encodeData(dataString));
-            tg.sendData(encodeData(dataString));
+            try {
+        tg.sendData(dataString);
+    } catch (e) {
+        console.error('Ошибка отправки данных:', e);
+    }
             // Здесь добавьте код для отправки данных в Telegram через API
         });
     </script>
