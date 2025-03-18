@@ -163,7 +163,7 @@
             console.log('Отправляемые данные:', dataString);
             console.log('Отправляемые данные (закодированные):', encodeData(dataString));
             try {
-        tg.sendData(dataString);
+        tg.sendData(encodeData(dataString));
     } catch (e) {
         console.error('Ошибка отправки данных:', e);
     }
