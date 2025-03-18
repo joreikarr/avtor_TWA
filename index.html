@@ -70,7 +70,7 @@
          const queryString = url.split('?')[1];
          const urlParams = new URLSearchParams(queryString);
          const work_type = urlParams.get('work_type');
-         let work_type_text = document.getElementById('work_type_text').value = work_type;
+         let work_type_text = document.getElementById('work_type_text').innerHTML = work_type;
          let tg = window.Telegram.WebApp; 
          tg.MainButton.text = "Відправити";
         // Имитируем получение данных от бота
@@ -87,9 +87,9 @@
         ];
 
         // Функция для разбора строки и заполнения таблицы
-        function populateTable(data) {
+        function populateTable(raw_data) {
             // Разделяем данные на две части (гуманитарные и технические дисциплины)
-            let tablesData = data.split('_');
+            let tablesData = raw_data.split('_');
             
             // Для каждой таблицы
             tablesData.forEach((tableData, tableIndex) => {
