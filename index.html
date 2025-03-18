@@ -133,7 +133,9 @@
 
         function encodeData(data) {
     // Кодируем строку в base64
+        console.log("Data to encode: "+data);
     const encodedData = btoa(data);
+            console.log("Encoded data: "+encodedData);
     return encodedData;
 }
         
