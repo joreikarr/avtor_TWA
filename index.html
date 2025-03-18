@@ -70,7 +70,8 @@
          const url = window.location.search;
          const queryString = url.split('?')[1];
          const urlParams = new URLSearchParams(queryString);
-         const work_type = urlParams.get('work_type');
+         const work_type_tmp = urlParams.get('work_type');
+        let work_type = work_type_tmp.replace('_', ' ');
          let work_type_text = document.getElementById('work_type_text').innerHTML = work_type;
          let tg = window.Telegram.WebApp; 
          tg.MainButton.text = "Відправити";
