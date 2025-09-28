@@ -63,7 +63,7 @@
     <script>
         function decodeData(encodedData) {
             let decodedData = atob(encodedData);  // Декодируем данные с помощью base64
-            let result = decodedData.replace(/\s/g, '')
+            let result = decodedData.replace(/\s/g, '');
             return result;  
         }
 
@@ -109,9 +109,10 @@
                     cells.forEach(cellData => {
                         let tdCell = document.createElement('td'); 
                         let input = document.createElement('input');
-                        input.type = 'text'; // заменили на text
+                        input.type = 'text'; // используем text
                         input.classList.add('form-control');
-                        input.value = cellData; 
+                        // при инициализации тоже заменяем точки на запятые
+                        input.value = cellData.replace(/\./g, ','); 
                         tdCell.appendChild(input); 
                         row.appendChild(tdCell); 
                     });
@@ -124,7 +125,7 @@
         // Заполняем таблицу при загрузке
         populateTable(incomingData);
 
-        // Автозамена точки на запятую
+        // Автозамена точки на запятую при вводе
         document.addEventListener('input', function(e) {
             if (e.target.tagName === 'INPUT') {
                 if (e.target.value.includes('.')) {
