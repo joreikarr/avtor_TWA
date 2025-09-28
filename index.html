@@ -27,9 +27,7 @@
                         <th>90-100%</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Строки таблицы будут заполняться динамически -->
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
 
@@ -50,46 +48,33 @@
                         <th>90-100%</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Строки таблицы будут заполняться динамически -->
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
-        
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         function decodeData(encodedData) {
-            let decodedData = atob(encodedData);  // Декодируем данные с помощью base64
-            let result = decodedData.replace(/\s/g, '');
-            return result;  
+            let decodedData = atob(encodedData);
+            return decodedData.replace(/\s/g, '');
         }
 
-        const url = window.location.search;
-        const queryString = url.split('?')[1];
-        const urlParams = new URLSearchParams(queryString);
-        const work_type_tmp = urlParams.get('work_type');
-        let work_type = work_type_tmp.replaceAll('_', ' ');
-        let work_type_text = document.getElementById('work_type_text').innerHTML = work_type;
+        const urlParams = new URLSearchParams(window.location.search);
+        let work_type = urlParams.get('work_type')?.replaceAll('_', ' ') || 'Дисертація';
+        document.getElementById('work_type_text').innerHTML = work_type;
+
         let tg = window.Telegram.WebApp; 
         tg.MainButton.text = "Відправити";
 
         let incomingData = decodeData(urlParams.get('incomingData'));
 
-        // Заголовки строк
         const rowTitles = [
-            "1 день", 
-            "2-3 дні", 
-            "4-6 днів", 
-            "7-10 днів",
-            "11-14 днів", 
-            "15-20 днів", 
-            "20 і більше днів"
+            "1 день", "2-3 дні", "4-6 днів", "7-10 днів",
+            "11-14 днів", "15-20 днів", "20 і більше днів"
         ];
 
-        // Функция для разбора строки и заполнения таблицы
         function populateTable(raw_data) {
             let tablesData = raw_data.split('_');
             
@@ -109,7 +94,7 @@
                     cells.forEach(cellData => {
                         let tdCell = document.createElement('td'); 
                         let input = document.createElement('input');
-                        input.type = 'text'; // используем text
+                        input.type = 'text'; 
                         input.classList.add('form-control');
                         // при инициализации тоже заменяем точки на запятые
                         input.value = cellData.replace(/\./g, ','); 
@@ -122,7 +107,7 @@
             });
         }
 
-        // Заполняем таблицу при загрузке
+        // заполнение таблицы
         populateTable(incomingData);
 
         // Автозамена точки на запятую при вводе
@@ -134,7 +119,7 @@
             }
         });
 
-        // Обработчик кнопки отправки
+        // Кнопка отправки
         tg.MainButton.show().onClick(function() {
             let tables = [document.getElementById('humanitarianTable'), document.getElementById('technicalTable')];
             let dataToSend = [];
@@ -153,8 +138,7 @@
                 dataToSend.push(tableData.join('/'));
             });
 
-            let dataStringTmp = dataToSend.join('_');
-            let dataString = dataStringTmp + "-" + work_type;
+            let dataString = dataToSend.join('_') + "-" + work_type;
             console.log('Отправляемые данные:', dataString);
             try {
                 tg.sendData(dataString);
