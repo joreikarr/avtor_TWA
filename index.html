@@ -55,29 +55,30 @@
                 </tbody>
             </table>
         </div>
-        
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         function decodeData(encodedData) {
-    let decodedData = atob(encodedData);  // Декодируем данные с помощью base64
-    let result = decodedData.replace(/\s/g, '')
-    return result;  
-}
+            let decodedData = atob(encodedData);  // Декодируем данные с помощью base64
+            let result = decodedData.replace(/\s/g, '')
+            return result;  
+        }
 
-         const url = window.location.search;
-         const queryString = url.split('?')[1];
-         const urlParams = new URLSearchParams(queryString);
-         const work_type_tmp = urlParams.get('work_type');
+        const url = window.location.search;
+        const queryString = url.split('?')[1];
+        const urlParams = new URLSearchParams(queryString);
+        const work_type_tmp = urlParams.get('work_type');
         let work_type = work_type_tmp.replaceAll('_', ' ');
-         let work_type_text = document.getElementById('work_type_text').innerHTML = work_type;
-         let tg = window.Telegram.WebApp; 
-         tg.MainButton.text = "Відправити";
+        let work_type_text = document.getElementById('work_type_text').innerHTML = work_type;
+        let tg = window.Telegram.WebApp; 
+        tg.MainButton.text = "Відправити";
+
         // Имитируем получение данных от бота
-        //let incomingData = "1*2*3*4*5/1*2*3*4*5/1*2*3*4*5/1*2*3*4*5/1*2*3*4*5/1*2*3*4*5_1*2*3*4*5/1*2*3*4*5/1*2*3*4*5/1*2*3*4*5/1*2*3*4*5/1*2*3*4*5"; // Пример строки от бота
+        // let incomingData = "1*2*3*4*5/1*2*3*4*5/1*2*3*4*5/1*2*3*4*5/1*2*3*4*5/1*2*3*4*5_1*2*3*4*5/1*2*3*4*5/1*2*3*4*5/1*2*3*4*5/1*2*3*4*5/1*2*3*4*5";
         let incomingData = decodeData(urlParams.get('incomingData'));
+
         // Заголовки строк для каждой таблицы (предустановленные)
         const rowTitles = [
             "1 день", 
@@ -92,6 +93,7 @@
         // Функция для разбора строки и заполнения таблицы
         function populateTable(raw_data) {
             console.log(raw_data);
+
             // Разделяем данные на две части (гуманитарные и технические дисциплины)
             let tablesData = raw_data.split('_');
             console.log(tablesData);
@@ -109,19 +111,19 @@
 
                     // Создаем ячейку с предустановленным заголовком строки
                     let td = document.createElement('td');
-                    td.textContent = rowTitles[rowIndex] || `Строка ${rowIndex + 1}`; // Если заголовок есть, используем его, иначе - номер строки
+                    td.textContent = rowTitles[rowIndex] || `Строка ${rowIndex + 1}`; 
                     row.appendChild(td);
                     
                     // Для каждой ячейки строки
                     cells.forEach(cellData => {
-                        console.log("cell data:"+cellData);
-                        let tdCell = document.createElement('td'); // Теперь создаем ячейку td для каждой ячейки
+                        console.log("cell data:" + cellData);
+                        let tdCell = document.createElement('td'); 
                         let input = document.createElement('input');
                         input.type = 'number';
                         input.classList.add('form-control');
-                        input.value = cellData; // Заполняем значением
-                        tdCell.appendChild(input); // Вставляем инпут в ячейку
-                        row.appendChild(tdCell); // Добавляем ячейку в строку
+                        input.value = cellData; 
+                        tdCell.appendChild(input); 
+                        row.appendChild(tdCell); 
                     });
 
                     // Добавляем строку в таблицу
@@ -134,18 +136,16 @@
         populateTable(incomingData);
 
         function encodeData(data) {
-    // Кодируем строку в base64
-        console.log("Data to encode: "+data);
-              try {
-        let encodedData = btoa(data);
-    } catch (e) {
-        console.error('Ошибка кодирования данных:', e);
-    }
-    
-            console.log("Encoded data: "+encodedData);
-    return encodedData;
-}
-        
+            // Кодируем строку в base64
+            console.log("Data to encode: " + data);
+            try {
+                let encodedData = btoa(data);
+            } catch (e) {
+                console.error('Ошибка кодирования данных:', e);
+            }
+            console.log("Encoded data: " + encodedData);
+            return encodedData;
+        }
         
         // Обработчик кнопки отправки данных в Telegram
         tg.MainButton.show().onClick(function() {
@@ -168,15 +168,13 @@
 
             // Формируем строку для отправки в Telegram
             let dataStringTmp = dataToSend.join('_');
-            
-            
             let dataString = dataStringTmp + "-" + work_type;
             console.log('Отправляемые данные:', dataString);
             try {
-        tg.sendData(dataString);
-    } catch (e) {
-        console.error('Ошибка отправки данных:', e);
-    }
+                tg.sendData(dataString);
+            } catch (e) {
+                console.error('Ошибка отправки данных:', e);
+            }
             // Здесь добавьте код для отправки данных в Telegram через API
         });
     </script>
