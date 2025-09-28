@@ -55,6 +55,7 @@
                 </tbody>
             </table>
         </div>
+        
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -75,11 +76,9 @@
         let tg = window.Telegram.WebApp; 
         tg.MainButton.text = "Відправити";
 
-        // Имитируем получение данных от бота
-        // let incomingData = "1*2*3*4*5/1*2*3*4*5/1*2*3*4*5/1*2*3*4*5/1*2*3*4*5/1*2*3*4*5_1*2*3*4*5/1*2*3*4*5/1*2*3*4*5/1*2*3*4*5/1*2*3*4*5/1*2*3*4*5";
         let incomingData = decodeData(urlParams.get('incomingData'));
 
-        // Заголовки строк для каждой таблицы (предустановленные)
+        // Заголовки строк
         const rowTitles = [
             "1 день", 
             "2-3 дні", 
@@ -92,64 +91,50 @@
 
         // Функция для разбора строки и заполнения таблицы
         function populateTable(raw_data) {
-            console.log(raw_data);
-
-            // Разделяем данные на две части (гуманитарные и технические дисциплины)
             let tablesData = raw_data.split('_');
-            console.log(tablesData);
             
-            // Для каждой таблицы
             tablesData.forEach((tableData, tableIndex) => {
-                let rows = tableData.split('/'); // Разделяем строки по /
-                let table = tableIndex === 0 ? document.getElementById('humanitarianTable') : document.getElementById('technicalTable'); // Выбираем таблицу
+                let rows = tableData.split('/'); 
+                let table = tableIndex === 0 ? document.getElementById('humanitarianTable') : document.getElementById('technicalTable');
                 let tbody = table.querySelector('tbody');
                 
-                // Для каждой строки в таблице
                 rows.forEach((rowData, rowIndex) => {
-                    let cells = rowData.split('*'); // Разделяем ячейки по *
+                    let cells = rowData.split('*'); 
                     let row = document.createElement('tr');
 
-                    // Создаем ячейку с предустановленным заголовком строки
                     let td = document.createElement('td');
-                    td.textContent = rowTitles[rowIndex] || `Строка ${rowIndex + 1}`; 
+                    td.textContent = rowTitles[rowIndex] || `Строка ${rowIndex + 1}`;
                     row.appendChild(td);
                     
-                    // Для каждой ячейки строки
                     cells.forEach(cellData => {
-                        console.log("cell data:" + cellData);
                         let tdCell = document.createElement('td'); 
                         let input = document.createElement('input');
-                        input.type = 'number';
+                        input.type = 'text'; // заменили на text
                         input.classList.add('form-control');
                         input.value = cellData; 
                         tdCell.appendChild(input); 
                         row.appendChild(tdCell); 
                     });
 
-                    // Добавляем строку в таблицу
                     tbody.appendChild(row);
                 });
             });
         }
 
-        // Заполняем таблицу при загрузке страницы
+        // Заполняем таблицу при загрузке
         populateTable(incomingData);
 
-        function encodeData(data) {
-            // Кодируем строку в base64
-            console.log("Data to encode: " + data);
-            try {
-                let encodedData = btoa(data);
-            } catch (e) {
-                console.error('Ошибка кодирования данных:', e);
+        // Автозамена точки на запятую
+        document.addEventListener('input', function(e) {
+            if (e.target.tagName === 'INPUT') {
+                if (e.target.value.includes('.')) {
+                    e.target.value = e.target.value.replace(/\./g, ',');
+                }
             }
-            console.log("Encoded data: " + encodedData);
-            return encodedData;
-        }
-        
-        // Обработчик кнопки отправки данных в Telegram
+        });
+
+        // Обработчик кнопки отправки
         tg.MainButton.show().onClick(function() {
-            // Собираем все данные из таблиц
             let tables = [document.getElementById('humanitarianTable'), document.getElementById('technicalTable')];
             let dataToSend = [];
 
@@ -159,14 +144,14 @@
                 rows.forEach(row => {
                     let rowData = [];
                     row.querySelectorAll('input').forEach(input => {
-                        rowData.push(input.value);
+                        // при сборе данных заменяем запятую обратно на точку
+                        rowData.push(input.value.replace(/,/g, '.'));
                     });
                     tableData.push(rowData.join('*'));
                 });
                 dataToSend.push(tableData.join('/'));
             });
 
-            // Формируем строку для отправки в Telegram
             let dataStringTmp = dataToSend.join('_');
             let dataString = dataStringTmp + "-" + work_type;
             console.log('Отправляемые данные:', dataString);
@@ -175,7 +160,6 @@
             } catch (e) {
                 console.error('Ошибка отправки данных:', e);
             }
-            // Здесь добавьте код для отправки данных в Telegram через API
         });
     </script>
 </body>
